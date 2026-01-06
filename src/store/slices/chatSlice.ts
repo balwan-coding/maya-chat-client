@@ -8,9 +8,15 @@ const chatSlice = createSlice({
     error: null as string | null,
   },
   reducers: {
-    loadeChats: (state, action: PayloadAction<any>) => {},
-    loadChatsSuccese: (state, action: PayloadAction<any>) => {},
-    loadChatFailer: (state, action: PayloadAction<any>) => {},
+    loadeChats: (state, action: PayloadAction<any>) => {
+      console.log(state , action)
+    },
+    loadChatsSuccese: (state, action: PayloadAction<any>) => {
+       console.log(state, action);
+    },
+    loadChatFailer: (state, action: PayloadAction<any>) => {
+       console.log(state, action);
+    },
   },
 });
 export const { loadeChats, loadChatsSuccese, loadChatFailer } =

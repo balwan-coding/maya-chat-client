@@ -14,10 +14,12 @@ const authSlice = createSlice({
   reducers: {
     // ================= LOGIN =================
     loginStart(state, action: PayloadAction<any>) {
+      console.log(action);
       state.isLoading = true;
       state.error = null;
     },
     loginSuccess(state, action: PayloadAction<User>) {
+      console.log(action);
       state.isLoading = false;
       state.isAuthenticated = true;
     },
@@ -29,6 +31,7 @@ const authSlice = createSlice({
 
     // ================= SIGNUP =================
     signupStart(state, action: PayloadAction<any>) {
+      console.log(action);
       state.isLoading = true;
       state.error = null;
     },

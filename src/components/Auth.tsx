@@ -5,7 +5,7 @@ import Input from "../shared/Input";
 import Button from "../shared/Button";
 import StarScene from "./StarScene";
 // import { connect } from "react-redux";
-import { loginStart, signupStart } from "../store/slices/authSlice";
+import { loginStart } from "../store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { State } from "../store/store";
 import { useNavigate } from "react-router-dom";
@@ -176,8 +176,5 @@ const Auth: React.FC<authProps> = () => {
   );
 };
 
-// const mapStateToDispatch = (data: any) => ({
-//   signupStart: signupStart(data),
-// });
 
 export default memo(Auth);

@@ -1,7 +1,7 @@
 import { io, type Socket } from "socket.io-client";
 
 // production url
-const BASE_URL: string = "https://maya-talk.netlify.app";
+const BASE_URL: string = "https://maya-chat-server-production.up.railway.app";
 
 //local url
 //const BASE_URL: string = "http://localhost:5000";

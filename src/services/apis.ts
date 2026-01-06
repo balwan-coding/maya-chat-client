@@ -1,7 +1,16 @@
 import axios from "axios";
-import type { CreateChat, CreateUserRequest, GetChat, LogingUserRequest } from "../types/dataTypes";
+import type {
+  CreateChat,
+  CreateUserRequest,
+  GetChat,
+  LogingUserRequest,
+} from "../types/dataTypes";
 
-const BASE_URL: string = "http://localhost:5000";
+// production url
+const BASE_URL: string = "https://maya-talk.netlify.app";
+
+//local url
+//const BASE_URL: string = "http://localhost:5000";
 
 export const signupUser = async (payload: CreateUserRequest) => {
   try {

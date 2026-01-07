@@ -5,7 +5,7 @@ import Input from "../shared/Input";
 import Button from "../shared/Button";
 import StarScene from "./StarScene";
 // import { connect } from "react-redux";
-import { loginStart } from "../store/slices/authSlice";
+import { loginStart, signupStart } from "../store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { State } from "../store/store";
 import { useNavigate } from "react-router-dom";
@@ -26,15 +26,20 @@ const Auth: React.FC<authProps> = () => {
       navigate("/");
     }
   }, [isAuthenticated]);
-  console.log(isLoading);
+
   const [isLogin, setIsLogin] = useState(true);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fromData = new FormData(e.currentTarget);
     console.log("from data", fromData);
     const data = Object.fromEntries(fromData.entries());
     console.log(data);
-    dispatch(loginStart(data));
+    if (isLogin) {
+      dispatch(signupStart(data));
+    } else {
+      dispatch(loginStart(data));
+    }
   };
   return (
     <div className="relative h-[calc(100vh-60px)]">
@@ -175,6 +180,5 @@ const Auth: React.FC<authProps> = () => {
     </div>
   );
 };
-
 
 export default memo(Auth);

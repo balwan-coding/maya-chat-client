@@ -10,7 +10,7 @@ const messageSlice = createSlice({
     addMessage: (state, action: PayloadAction<Message>) => {
       state.push(action.payload);
     },
-    setMessages: (state, action: PayloadAction<Message[]>) => {
+    setMessages: (_, action: PayloadAction<Message[]>) => {
       return action.payload;
     },
   },

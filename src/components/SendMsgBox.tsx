@@ -10,7 +10,7 @@ import { IoImagesSharp } from "react-icons/io5";
 import { connect, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import type { Message } from "../types/dataTypes";
-import { addMessage } from "../store/slices/messagesSlice";
+import { addMessage, setMessages } from "../store/slices/messagesSlice";
 import type { State } from "../store/store";
 import EmojiPicker from "emoji-picker-react";
 import Button from "../shared/Button";
@@ -19,9 +19,10 @@ import socket from "../services/socket";
 
 interface SendMsgBoxProps {
   addMessage: (msg: Message) => void;
+  setMessages: (msg: Message[]) => void;
 }
 
-const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage }) => {
+const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage, setMessages }) => {
   const [sendMsg, setSendMsg] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
   const [isEmojiOpen, setIsEmojiOpen] = useState<boolean>(false);
@@ -29,53 +30,55 @@ const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage }) => {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const user = useSelector((state: State) => state.auth.user);
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to server:", socket.id);
-    });
-
-    socket.on("message", (data: Message) => {
-      console.log("Received:", data);
-      addMessage(data);
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off("message");
-    };
-  }, [addMessage]);
-
+  const chatID = useSelector((state: State) => state.chat.crrChat);
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    console.log("hello msg");
     setIsEmojiOpen(false);
 
     if (sendMsg.trim() === "" && image == null) return;
 
-    const userId = user?.id as string;
-
-    console.log("user id 1.0", user, userId, user?.id);
-
-    if (!userId) {
-      return;
-    }
-
-    console.log("user Id", userId);
+    const userId = user?.id;
+    if (!userId) return;
 
     const newMsg: Message = {
-      senderId: "69535e8d04fd1cb998a55eb0",
+      senderId: userId,
       text: sendMsg,
-      messageType: "image",
-      chatId: "695c103b8ac76bf84d17813d",
+      messageType: "text",
+      chatId: chatID,
     };
 
-    socket.emit("message", newMsg);
-    addMessage(newMsg);
+    socket.emit("send_message", newMsg);
 
     setSendMsg("");
     setImage(null);
   };
+
+  useEffect(() => {
+    console.log("------------------ useEfeect is running");
+    const handleReceiveMessage = (data: Message) => {
+      console.log("data", data);
+      addMessage(data);
+    };
+
+    const handleAllChatsData = (data: Message[]) => {
+      console.log("-------------- data", data);
+      setMessages(data);
+    };
+
+    const handleConnect = () => {
+      console.log("Connected to server:", socket.id);
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("receive_message", handleReceiveMessage);
+    socket.on("join_room", handleAllChatsData);
+
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("receive_message", handleReceiveMessage);
+      socket.off("join_room", handleAllChatsData);
+    };
+  }, [addMessage, setMessages]);
 
   const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -173,7 +176,11 @@ const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage }) => {
         </motion.div>
 
         <button
-          onClick={() => setOpenMediaBox(!opneMediaBox)}
+          onClick={() => {
+            // setTimeout(() => {
+            setOpenMediaBox(!opneMediaBox);
+            // }, 1000);
+          }}
           className="cursor-pointer"
           type="button"
         >
@@ -190,6 +197,7 @@ const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage }) => {
 
 const mapDispatchToProps = {
   addMessage,
+  setMessages,
 };
 
 export default connect(null, mapDispatchToProps)(memo(SendMsgBox));

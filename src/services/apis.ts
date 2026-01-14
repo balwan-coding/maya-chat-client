@@ -5,6 +5,7 @@ import type {
   GetChat,
   LogingUserRequest,
 } from "../types/dataTypes";
+import { NormalizeChat } from "../utils/handleNormalize";
 
 // production url
 const BASE_URL: string = "https://maya-chat-server-production.up.railway.app";
@@ -87,7 +88,14 @@ export const getChat = async (data: GetChat) => {
     const response = await axios.post(`${BASE_URL}/api/chat/get`, {
       userId: userId,
     });
-    return response.data;
+    const responseData = response.data;
+    const normalize = NormalizeChat(responseData.data);
+
+    return {
+      data: normalize,
+      message: responseData.message,
+      succese: responseData.succese,
+    };
   } catch (error) {
     throw error;
   }

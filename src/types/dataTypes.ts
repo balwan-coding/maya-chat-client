@@ -2,11 +2,11 @@ export type UserRole = "user" | "admin";
 export type MessageType = "text" | "image" | "video" | "audio" | "file";
 
 export interface Message {
-  id?: string;
+  _id?: string;
   chatId: string;
   messageType: MessageType;
   media?: string;
-  senderId: string;
+  senderId: any;
   text?: string;
 }
 
@@ -20,7 +20,7 @@ export interface Users {
 }
 
 export interface User {
-  id: number | string;
+  id: string;
   name: string;
   userName: string;
   profilePic?: string | null;
@@ -58,4 +58,13 @@ export interface CreateChat {
 
 export interface GetChat {
   userId: string;
+}
+
+export interface Chat {
+  _id: string;
+  type: "private" | "group";
+  memberIds: string[];
+  groupName: string;
+  createdAt: string;
+  updatedAt: string;
 }

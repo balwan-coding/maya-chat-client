@@ -1,26 +1,34 @@
 import React, { memo } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import type { State } from "../store/store";
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = ({}) => {
+  const { isAuthenticated, user } = useSelector((state: State) => state.auth);
   return (
     <header>
-      <nav className=" z-50 border-gray-200 px-4 lg:px-6 py-2.5 bg-gray-800">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-7xl">
-          <Link to="/" className="flex items-center">
-            {/* <img src="https://flowbite.com/docs/images/logo.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" /> */}
+      <nav className="z-50 border-gray-200  bg-gray-800">
+        <div className="flex flex-wrap justify-between items-center bg-[#0c0d0d] h-10">
+          <Link to="/" className="flex items-center justify-center">
+            {/* <div className="h-20">
+              <img src={Logo} className="w-full h-full" alt="maya Logo" />
+            </div> */}
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
               MAYA
             </span>
           </Link>
+
           <div className="flex items-center lg:order-2">
-            <Link
-              to="/auth"
-              className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-            >
-              Log in
-            </Link>
+            {!isAuthenticated && !user && (
+              <Link
+                to="/auth"
+                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+              >
+                Log in
+              </Link>
+            )}
 
             <button
               data-collapse-toggle="mobile-menu-2"

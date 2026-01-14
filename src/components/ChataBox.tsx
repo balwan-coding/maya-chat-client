@@ -9,12 +9,16 @@ interface ChatBoxProps {
 const ChataBox: React.FC<ChatBoxProps> = ({ messages }) => {
   const user = useSelector((state: State) => state.auth.user);
 
+  console.log("the message datas", messages);
+
   return (
-    <div className="h-[93%] bg-gray-700 p-2">
+    <div className="h-[93%] bg-gray-700 p-2 overflow-y-scroll">
       <ul className="flex flex-col gap-2">
-        {messages?.map((v: Message, i: number) =>
-          v.senderId === user?.id ? (
-            <div key={v.id} className="bg-blue-400 p-1 self-end">
+        {messages?.map((v: Message, i: number) => {
+          const senderId = v.senderId;
+
+          return senderId._id == user?.id ? (
+            <div key={v._id} className="bg-blue-400 p-1 self-end">
               {v.media && (
                 <div className="w-40 h-40">
                   <img
@@ -27,7 +31,7 @@ const ChataBox: React.FC<ChatBoxProps> = ({ messages }) => {
               <div key={`${v.text}${i}`}>{v.text}</div>
             </div>
           ) : (
-            <div key={v.id} className="bg-gray-400 p-1 self-start">
+            <div key={v._id} className="bg-gray-400 p-1 self-start">
               {v.media && (
                 <div className="w-40 h-40">
                   <img
@@ -44,8 +48,8 @@ const ChataBox: React.FC<ChatBoxProps> = ({ messages }) => {
                 {v.text}
               </div>
             </div>
-          )
-        )}
+          );
+        })}
       </ul>
     </div>
   );

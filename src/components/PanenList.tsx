@@ -6,6 +6,7 @@ import type { State } from "../store/store";
 import { setCrrChat } from "../store/slices/chatSlice";
 import { chatSelectors } from "../store/selectors/slectotors";
 import socket from "../services/socket";
+import { setCurrentUserId } from "../store/slices/usersSlice";
 
 interface PanenListProps {}
 
@@ -14,26 +15,23 @@ const PanenList: React.FC<PanenListProps> = () => {
   const users = useSelector((state: State) => state.users.entities);
   const user = useSelector((state: State) => state.auth.user);
   const chats = useSelector(chatSelectors.selectAll);
-  const setCurrentChat = (_id: string) => {
-    console.log("crr chat id", _id);
+
+  const setCurrentChat = (_id: string, userId: string) => {
     dispatch(setCrrChat(_id));
+    dispatch(setCurrentUserId(userId));
     socket.emit("join_room", _id);
   };
 
   return (
     <div className="overflow-hidden">
-      {chats.map((v) => {
-        // if (v._id === user?.id) {
-        //   return null;
-        // }
-
-        const id = user?.id == v.members[0] ? v.members[1] : v.members[0];
-
+      {chats?.map((v) => {
+        console.log("the ids", v, v?.members, v?.members);
+        const id = user?.id == v?.members[0] ? v?.members[1] : v?.members[0];
         return (
           <div
-            key={v._id}
-            className="w-full text-white h-16 flex gap-2 lowercase cursor-pointer border-b-2 border-gray-400 py-1 px-2 hover:bg-gray-600"
-            onClick={() => setCurrentChat(v._id)}
+            key={id}
+            className="w-full text-white pl-12 h-16 flex gap-2 lowercase cursor-pointer border-b-2 border-gray-400 py-1 px-2 hover:bg-gray-600"
+            onClick={() => setCurrentChat(v._id, id)}
           >
             <div
               className={`${
@@ -42,18 +40,18 @@ const PanenList: React.FC<PanenListProps> = () => {
             >
               <img
                 className="rounded-full h-full w-full object-cover"
-                src={users[id].profilePic || Avtar}
+                src={users[id]?.profilePhoto || Avtar}
                 alt=""
               />
 
-              {users[id].isOnlie && (
+              {users[id]?.isOnlie && (
                 <span className="absolute bottom-0 right-0 flex size-3">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex size-3 rounded-full bg-green-500"></span>
                 </span>
               )}
             </div>
-            <p>{users[id].name}</p>
+            <p>{users[id]?.name}</p>
           </div>
         );
       })}

@@ -5,7 +5,15 @@ export interface Message {
   _id?: string;
   chatId: string;
   messageType: MessageType;
-  media?: string;
+  media?: {
+    url?: string;
+    fileName?: string;
+    fileSize?: number;
+    mimeType?: string;
+    duration?: number;
+    width?: number;
+    height?: number;
+  };
   senderId: any;
   text?: string;
 }
@@ -15,7 +23,7 @@ export interface Users {
   id?: string;
   name: string;
   userName: string;
-  profilePic?: string | null;
+  profilePhoto?: string | null;
   isOnlie: boolean;
 }
 

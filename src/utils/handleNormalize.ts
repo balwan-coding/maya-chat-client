@@ -23,7 +23,7 @@ export const NormalizeChat = (data: any) => {
       chats: [],
       members: [],
       memberMap: {},
-    }
+    },
   );
 
   delete result.memberMap;

@@ -9,7 +9,7 @@ import { RiEmojiStickerLine } from "react-icons/ri";
 import { IoImagesSharp } from "react-icons/io5";
 import { connect, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import type { Message } from "../types/dataTypes";
+import type { Message, MessageType } from "../types/dataTypes";
 import { addMessage, setMessages } from "../store/slices/messagesSlice";
 import type { State } from "../store/store";
 import EmojiPicker from "emoji-picker-react";
@@ -24,7 +24,10 @@ interface SendMsgBoxProps {
 
 const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage, setMessages }) => {
   const [sendMsg, setSendMsg] = useState<string>("");
-  const [image, setImage] = useState<string | null>(null);
+  const [messageType, setMessagesType] = useState<MessageType>("text");
+  const [image, setImage] = useState<string>(
+    "https://images.pexels.com/photos/32065736/pexels-photo-32065736.jpeg?_gl=1*h1kqow*_ga*ODk2MDcwOTMyLjE3Njg0OTk1NTQ.*_ga_8JE65Q40S6*czE3Njg0OTk1NTQkbzEkZzEkdDE3Njg0OTk1NjAkajU0JGwwJGgw",
+  );
   const [isEmojiOpen, setIsEmojiOpen] = useState<boolean>(false);
   const [opneMediaBox, setOpenMediaBox] = useState<boolean>(false);
 
@@ -43,25 +46,26 @@ const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage, setMessages }) => {
     const newMsg: Message = {
       senderId: userId,
       text: sendMsg,
-      messageType: "text",
+      messageType: messageType,
       chatId: chatID,
+      media: {
+        url: image,
+      },
     };
 
     socket.emit("send_message", newMsg);
 
     setSendMsg("");
-    setImage(null);
+    setImage("");
   };
 
   useEffect(() => {
-    console.log("------------------ useEfeect is running");
     const handleReceiveMessage = (data: Message) => {
       console.log("data", data);
       addMessage(data);
     };
 
     const handleAllChatsData = (data: Message[]) => {
-      console.log("-------------- data", data);
       setMessages(data);
     };
 
@@ -94,6 +98,7 @@ const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage, setMessages }) => {
       reader.readAsDataURL(file);
     }
     setImage(e.target.value);
+    setMessagesType("image");
   };
 
   const insertEmojiAtCursor = (word: string) => {
@@ -119,7 +124,7 @@ const SendMsgBox: React.FC<SendMsgBoxProps> = ({ addMessage, setMessages }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-[5%_80%_5%_10%] h-[7%] bg-gray-400"
+      className="grid grid-cols-[5%_80%_5%_10%] h-[51.1px] bg-gray-400"
     >
       <div>
         <button

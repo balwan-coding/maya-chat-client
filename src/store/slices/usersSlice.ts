@@ -14,6 +14,7 @@ const usersSlice = createSlice({
   initialState: usersAdapter.getInitialState({
     loading: false,
     error: null as string | null,
+    currentUserId: null as string | null,
   }),
   reducers: {
     loadeUsers: (state) => {
@@ -42,6 +43,19 @@ const usersSlice = createSlice({
         changes: { isOnlie: false },
       });
     },
+
+    setCurrentUserId: (state, action: PayloadAction<string>) => {
+      console.log(
+        "------------------------------------------------",
+        action.payload,
+      );
+      state.currentUserId = action.payload;
+    },
+
+    addOneUser: (state, action: PayloadAction<Users[]>) => {
+      console.log("----------------- user data in file", action.payload);
+      usersAdapter.addMany(state, action.payload);
+    },
   },
 });
 
@@ -51,6 +65,8 @@ export const {
   loadUserFailer,
   onlineUser,
   offlineUser,
+  setCurrentUserId,
+  addOneUser,
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

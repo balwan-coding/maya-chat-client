@@ -18,7 +18,7 @@ export const signupUser = async (payload: CreateUserRequest) => {
     const response = await axios.post(
       `${BASE_URL}/api/auth/user/regiseter`,
       payload,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     console.log(response);
     return response.data;
@@ -35,7 +35,7 @@ export const loginUser = async (payload: LogingUserRequest) => {
       payload,
       {
         withCredentials: true,
-      }
+      },
     );
     console.log(response.data);
     return response.data;
@@ -75,8 +75,13 @@ export const createChat = async (data: CreateChat) => {
       currentUserId,
       targetUserId,
     });
-    console.log(response);
-    return response.data;
+    const responseData = response.data;
+    const normalize = NormalizeChat(responseData.data);
+    return {
+      data: normalize,
+      message: responseData.message,
+      succese: responseData.succese,
+    };
   } catch (error) {
     throw error;
   }

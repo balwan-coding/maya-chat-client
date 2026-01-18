@@ -45,7 +45,7 @@ const Users: React.FC<chatsPropes> = () => {
               >
                 <img
                   className="rounded-full h-full w-full object-cover"
-                  src={v.profilePic || Avtar}
+                  src={v.profilePhoto  || Avtar}
                   alt=""
                 />
 

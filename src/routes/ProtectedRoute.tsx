@@ -8,10 +8,7 @@ interface RoutesRolePropes {
 }
 
 const RoleProtectedRoute: React.FC<RoutesRolePropes> = ({ allowedRoles }) => {
-  console.log("run for fun");
   const { isAuthenticated, user } = useSelector((state: State) => state.auth);
-
-  console.log("-------------- is auth data", isAuthenticated, user);
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;

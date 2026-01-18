@@ -1,18 +1,34 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useRef } from "react";
 import { connect, useSelector } from "react-redux";
 import type { Message } from "../types/dataTypes";
 import type { State } from "../store/store";
 import { getMessagesSelector } from "../store/selectors/messages";
+import NoMessage from "./NoMessage";
 interface ChatBoxProps {
   messages: Message[];
 }
 const ChataBox: React.FC<ChatBoxProps> = ({ messages }) => {
+  const scroolRef = useRef<HTMLDivElement | null>(null);
   const user = useSelector((state: State) => state.auth.user);
+  const currentUserId = useSelector(
+    (state: State) => state.users.currentUserId,
+  );
 
-  console.log("the message datas", messages);
+  useEffect(() => {
+    if (scroolRef.current) {
+      scroolRef.current.scrollTop = scroolRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  if (!currentUserId) {
+    return <NoMessage />;
+  }
 
   return (
-    <div className="h-[93%] bg-gray-700 p-2 overflow-y-scroll">
+    <div
+      ref={scroolRef}
+      className="h-[calc(100vh-156px)] bg-gray-800 p-2 overflow-y-scroll"
+    >
       <ul className="flex flex-col gap-2">
         {messages?.map((v: Message, i: number) => {
           const senderId = v.senderId;
@@ -23,7 +39,7 @@ const ChataBox: React.FC<ChatBoxProps> = ({ messages }) => {
                 <div className="w-40 h-40">
                   <img
                     className="w-full h-full object-cover"
-                    src={v.media}
+                    src={v.media.url}
                     alt=""
                   />
                 </div>
@@ -36,7 +52,7 @@ const ChataBox: React.FC<ChatBoxProps> = ({ messages }) => {
                 <div className="w-40 h-40">
                   <img
                     className="w-full h-full object-cover"
-                    src={v.media}
+                    src={v.media.url}
                     alt=""
                   />
                 </div>

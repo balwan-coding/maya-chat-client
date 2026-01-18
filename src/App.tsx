@@ -4,7 +4,6 @@ import { checkAuthStart } from "./store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { State } from "./store/store";
 import Loading from "./shared/Loading";
-import Slider from "./components/Slider";
 // import { loadeUsers } from "./store/slices/usersSlice";
 
 function App() {
@@ -31,27 +30,24 @@ function App() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <div className="flex h-full">
-        <Slider />
-        <div className="w-full h-full">
-          <Header />
+      <div className="w-full h-full">
+        <Header />
 
-          <Routes>
-            <Route path="/auth" element={<Auth />}></Route>
-            <Route path="/unauthorized" element={<Unauthorized />}></Route>
-            <Route
-              element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}
-            >
-              <Route index element={<ChatHome />}></Route>
-              <Route path="/allUsers" element={<Users />}></Route>
-            </Route>
+        <Routes>
+          <Route path="/auth" element={<Auth />}></Route>
+          <Route path="/unauthorized" element={<Unauthorized />}></Route>
+          <Route
+            element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}
+          >
+            <Route index element={<ChatHome />}></Route>
+            <Route path="/allUsers" element={<Users />}></Route>
+          </Route>
 
-            <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
-              <Route path="/dasboard" element={<Dasboard />}></Route>
-            </Route>
-            <Route path="*" element={<NotFound />}></Route>
-          </Routes>
-        </div>
+          <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/dasboard" element={<Dasboard />}></Route>
+          </Route>
+          <Route path="*" element={<NotFound />}></Route>
+        </Routes>
       </div>
     </Suspense>
   );

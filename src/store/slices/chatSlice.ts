@@ -42,7 +42,8 @@ const chatSlice = createSlice({
     },
 
     createChatSuccese: (state, action: PayloadAction<any>) => {
-      chatAdapter.setAll(state, action.payload);
+      console.log("---------- the chats data", action.payload);
+      chatAdapter.addMany(state, action.payload);
       state.loading = false;
     },
 
@@ -56,6 +57,13 @@ const chatSlice = createSlice({
     },
   },
 });
-export const { loadeChats, loadChatsSuccese, loadChatFailer, setCrrChat } =
-  chatSlice.actions;
+export const {
+  loadeChats,
+  loadChatsSuccese,
+  loadChatFailer,
+  setCrrChat,
+  createChatStart,
+  createChatSuccese,
+  createChatFailer,
+} = chatSlice.actions;
 export default chatSlice.reducer;
